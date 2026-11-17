@@ -1,162 +1,680 @@
-<!doctype html>
-<html lang="zh-Hant" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="數位多媒體學生的視覺設計、互動網頁與影像作品集。"
-    />
-    <title>湯川亞美｜數位多媒體作品集</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script defer src="script.js"></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main-content">跳到主要內容</a>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="王小明 (Alex Wang) 的個人簡介：國立範例大學資訊管理學系大三，專注於前端網頁開發與系統實作。">
+  <title>個人簡介 - 王小明</title>
 
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="回到首頁">
-        <span class="brand-mark">YA</span>
-        <span class="brand-copy">
-          <strong>LIN YU-AN</strong>
-          <small>Digital Media Student</small>
-        </span>
-      </a>
+  <!-- 1. Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-        <span>選單</span>
-      </button>
+  <style>
+    /* ============================================================
+       2. Design tokens — every color and font lives here on :root
+       ============================================================ */
+    :root {
+      /* Gradient palette */
+      --color-blue: #7DD3FC;
+      --color-violet: #A78BFA;
+      --color-pink: #F9A8D4;
 
-      <nav id="site-nav" class="site-nav" aria-label="主要導覽">
-        <a href="#about">關於我</a>
-        <a href="#works">作品展示</a>
-        <a href="#contact">聯絡我</a>
-        <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">
-          <span class="theme-icon" aria-hidden="true">◐</span>
-          <span>切換主題</span>
-        </button>
-      </nav>
+      /* Ink */
+      --color-text: #0F172A;
+      --color-text-muted: #1E293B;
+      --color-focus: #0F172A;
+      --color-canvas: #A78BFA;
+
+      /* Liquid Glass */
+      --color-glass: rgba(255, 255, 255, 0.18);
+      --color-glass-strong: rgba(255, 255, 255, 0.30);
+      --color-glass-hover: rgba(255, 255, 255, 0.34);
+      --color-glass-fallback: rgba(255, 255, 255, 0.52);
+      --color-glass-border: rgba(255, 255, 255, 0.45);
+      --color-glass-border-strong: rgba(255, 255, 255, 0.65);
+      --color-glass-highlight: rgba(255, 255, 255, 0.6);
+      --color-sheen: rgba(255, 255, 255, 0.28);
+      --color-sheen-end: rgba(255, 255, 255, 0);
+      --color-transparent: rgba(0, 0, 0, 0);
+
+      /* Soft ambient depth (never hard shadows) */
+      --color-shadow: rgba(15, 23, 42, 0.10);
+      --color-shadow-soft: rgba(15, 23, 42, 0.06);
+
+      /* Type */
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+
+      /* Glass recipe */
+      --glass-blur: 24px;
+      --glass-saturation: 180%;
+
+      /* Shape */
+      --radius-card: 24px;
+      --radius-pill: 999px;
+      --radius-line: 3px;
+
+      /* Layout */
+      --page-max: 760px;
+      --nav-gap: 12px;
+      --nav-height: 60px;
+      --tap-target: 46px;
+    }
+
+    /* ============================================================
+       3. Base / reset
+       ============================================================ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      background-color: var(--color-canvas);
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding-bottom: 48px;
+      overflow-x: hidden;
+      background-color: var(--color-transparent);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.7;
+      letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overflow-wrap: break-word;
+      -webkit-tap-highlight-color: var(--color-transparent);
+    }
+
+    /* Vivid, slowly drifting, blurred gradient (fixed behind everything) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -22vmax;
+      z-index: -1;
+      pointer-events: none;
+      background-color: var(--color-violet);
+      background-image:
+        radial-gradient(circle at 18% 22%, var(--color-blue) 0%, var(--color-transparent) 58%),
+        radial-gradient(circle at 82% 14%, var(--color-violet) 0%, var(--color-transparent) 56%),
+        radial-gradient(circle at 72% 84%, var(--color-pink) 0%, var(--color-transparent) 60%),
+        radial-gradient(circle at 14% 78%, var(--color-violet) 0%, var(--color-transparent) 58%),
+        linear-gradient(130deg, var(--color-blue), var(--color-violet) 52%, var(--color-pink));
+      filter: blur(56px) saturate(140%);
+      animation: liquid-drift 34s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes liquid-drift {
+      0% {
+        transform: translate3d(-1.5%, -1%, 0) scale(1.06) rotate(-1.2deg);
+      }
+      50% {
+        transform: translate3d(1.5%, 2%, 0) scale(1.12) rotate(1deg);
+      }
+      100% {
+        transform: translate3d(-1%, 2.5%, 0) scale(1.08) rotate(-0.6deg);
+      }
+    }
+
+    img,
+    video {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ============================================================
+       4. Liquid Glass panel recipe
+       ============================================================ */
+    .glass {
+      position: relative;
+      background-color: var(--color-glass);
+      background-image: linear-gradient(155deg, var(--color-sheen) 0%, var(--color-sheen-end) 46%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      border: 1px solid var(--color-glass-border);
+      border-radius: var(--radius-card);
+      box-shadow:
+        inset 0 1px 0 var(--color-glass-highlight),
+        0 18px 44px var(--color-shadow-soft);
+    }
+
+    /* ============================================================
+       5. Floating pill navigation
+       ============================================================ */
+    .site-nav {
+      position: fixed;
+      top: var(--nav-gap);
+      left: 50%;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: calc(100% - (var(--nav-gap) * 2));
+      max-width: var(--page-max);
+      height: var(--nav-height);
+      margin: 0;
+      padding: 6px 8px 6px 12px;
+      transform: translateX(-50%);
+      border-radius: var(--radius-pill);
+    }
+
+    .nav-brand {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: var(--tap-target);
+      min-height: var(--tap-target);
+      padding: 0 8px;
+      border-radius: var(--radius-pill);
+      color: var(--color-text);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      transition: background-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--tap-target);
+      padding: 0 10px;
+      border: 1px solid var(--color-transparent);
+      border-radius: var(--radius-pill);
+      color: var(--color-text);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    /* ============================================================
+       6. Skip link (keyboard users)
+       ============================================================ */
+    .skip-link {
+      position: fixed;
+      top: var(--nav-gap);
+      left: var(--nav-gap);
+      z-index: 200;
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--tap-target);
+      padding: 0 18px;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      background-color: var(--color-glass-strong);
+      border: 1px solid var(--color-glass-border);
+      border-radius: var(--radius-pill);
+      box-shadow: inset 0 1px 0 var(--color-glass-highlight);
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      transform: translateY(calc(-100% - 32px));
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus-visible {
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       7. Layout
+       ============================================================ */
+    .container {
+      width: 100%;
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: calc(var(--nav-gap) + var(--nav-height) + 20px) 16px 0;
+    }
+
+    .hero {
+      margin: 0 0 32px;
+      padding: 32px 20px;
+      text-align: center;
+    }
+
+    section[id] {
+      scroll-margin-top: calc(var(--nav-gap) + var(--nav-height) + 16px);
+    }
+
+    .section {
+      margin: 0 0 32px;
+    }
+
+    .section-title {
+      margin: 0 0 16px;
+      color: var(--color-text);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.35;
+      letter-spacing: 0.06em;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 42px;
+      height: var(--radius-line);
+      margin-top: 10px;
+      border-radius: var(--radius-pill);
+      background-image: linear-gradient(90deg, var(--color-violet), var(--color-pink));
+    }
+
+    /* ============================================================
+       8. Hero
+       ============================================================ */
+    .hero .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 14px;
+      background-color: var(--color-glass-strong);
+      background-image: linear-gradient(155deg, var(--color-sheen), var(--color-sheen-end) 60%);
+      border: 1px solid var(--color-glass-border);
+      border-radius: var(--radius-pill);
+      box-shadow: inset 0 1px 0 var(--color-glass-highlight);
+      color: var(--color-text);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.12em;
+    }
+
+    .hero h1 {
+      margin: 14px 0 0;
+      color: var(--color-text);
+      font-size: clamp(28px, 7.4vw, 40px);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+
+    .hero .tagline {
+      max-width: 34ch;
+      margin: 10px auto 0;
+      color: var(--color-text-muted);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.7;
+      letter-spacing: 0.01em;
+    }
+
+    /* ============================================================
+       9. About
+       ============================================================ */
+    .about-info {
+      padding: 22px;
+    }
+
+    .about-info p {
+      margin: 0;
+      color: var(--color-text);
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .about-info p + p {
+      margin-top: 12px;
+    }
+
+    /* ============================================================
+       10. Skills
+       ============================================================ */
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .skill-item {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 8px 16px;
+      background-color: var(--color-glass);
+      background-image: linear-gradient(155deg, var(--color-sheen), var(--color-sheen-end) 60%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      border: 1px solid var(--color-glass-border);
+      border-radius: var(--radius-pill);
+      box-shadow: inset 0 1px 0 var(--color-glass-highlight);
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================================
+       11. Experience
+       ============================================================ */
+    .experience-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .exp-card {
+      padding: 22px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .exp-card h3 {
+      margin: 0 0 8px;
+      color: var(--color-text);
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.45;
+      letter-spacing: 0.01em;
+    }
+
+    .exp-card .exp-desc {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    /* ============================================================
+       12. Contact
+       ============================================================ */
+    .contact-section {
+      margin: 0 0 8px;
+      padding: 28px 22px;
+      text-align: center;
+    }
+
+    .contact-section .section-title {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .contact-section .section-title::after {
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 26px;
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      background-color: var(--color-glass);
+      background-image: linear-gradient(160deg, var(--color-sheen), var(--color-sheen-end) 55%);
+      border: 1px solid var(--color-glass-border);
+      border-radius: var(--radius-pill);
+      box-shadow:
+        inset 0 1px 0 var(--color-glass-highlight),
+        0 8px 24px var(--color-shadow-soft);
+      color: var(--color-text);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    /* ============================================================
+       13. Interaction — magnify + brighten
+       ============================================================ */
+    @media (hover: hover) {
+      .btn:hover {
+        transform: scale(1.04);
+        background-color: var(--color-glass-hover);
+        border-color: var(--color-glass-border-strong);
+        box-shadow:
+          inset 0 1px 0 var(--color-glass-highlight),
+          0 12px 32px var(--color-shadow);
+      }
+
+      .nav-brand:hover {
+        background-color: var(--color-glass-strong);
+        transform: scale(1.04);
+      }
+
+      .nav-links a:hover {
+        background-color: var(--color-glass-strong);
+        border-color: var(--color-glass-border);
+        transform: scale(1.03);
+      }
+
+      .exp-card:hover {
+        transform: translateY(-3px);
+        border-color: var(--color-glass-border-strong);
+      }
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .nav-brand:active,
+    .nav-links a:active {
+      background-color: var(--color-glass-hover);
+    }
+
+    :where(a, button):focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 3px;
+    }
+
+    /* ============================================================
+       14. Larger screens (mobile-first base above)
+       ============================================================ */
+    @media (min-width: 560px) {
+      .container {
+        padding-right: 24px;
+        padding-left: 24px;
+      }
+
+      .hero {
+        padding: 44px 32px;
+      }
+
+      .hero .tagline {
+        font-size: 17px;
+      }
+
+      .about-info,
+      .exp-card {
+        padding: 26px;
+      }
+
+      .contact-section {
+        padding: 36px 32px;
+      }
+
+      .contact-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: none;
+      }
+
+      .btn {
+        width: auto;
+        min-width: 148px;
+      }
+    }
+
+    @media (min-width: 680px) {
+      .experience-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .section {
+        margin-bottom: 38px;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+    }
+
+    /* ============================================================
+       15. Progressive enhancement / preferences
+       ============================================================ */
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .glass,
+      .site-nav,
+      .skill-item,
+      .btn,
+      .skip-link {
+        background-color: var(--color-glass-fallback);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      /* Keep the requested ambient gradient drift, but make it extra calm. */
+      body::before {
+        animation-duration: 60s;
+      }
+
+      /* Remove incidental UI motion for reduced-motion users. */
+      .btn,
+      .nav-brand,
+      .nav-links a,
+      .skip-link,
+      .exp-card {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">跳至主要內容</a>
+
+  <!-- 浮動玻璃膠囊導覽列 -->
+  <nav class="site-nav glass" aria-label="主要導覽">
+    <a class="nav-brand" href="#top" aria-label="AW，回到頁首">AW</a>
+    <ul class="nav-links">
+      <li><a href="#about">關於</a></li>
+      <li><a href="#skills">能力</a></li>
+      <li><a href="#experience">經歷</a></li>
+      <li><a href="#contact">聯絡</a></li>
+    </ul>
+  </nav>
+
+  <main class="container" id="main" tabindex="-1">
+
+    <!-- 順序 1: 名字 ＋ 一句話介紹 -->
+    <header class="hero glass" id="top">
+      <span class="tag">國立範例大學 資訊管理學系 大三</span>
+      <h1>王小明 (Alex Wang)</h1>
+      <p class="tagline">「用程式碼解決實際問題，持續追求技術卓越的軟體開發者」</p>
     </header>
 
-    <main id="main-content">
-      <section id="top" class="hero section-shell" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">DIGITAL MEDIA · PORTFOLIO 2026</p>
-          <h1 id="hero-title">把想像，<span>做成可以互動的作品。</span></h1>
-          <p class="hero-lead">
-            我是湯川亞美，正在學習用影像、介面與程式，把觀察到的生活轉換成有節奏、有溫度的數位體驗。
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#works">瀏覽作品 <span aria-hidden="true">↗</span></a>
-            <a class="button button-quiet" href="#about">認識我</a>
-          </div>
-          <div class="hero-meta" aria-label="個人專長摘要">
-            <div><strong>03</strong><span>作品類別</span></div>
-            <div><strong>08</strong><span>完成專案</span></div>
-            <div><strong>01</strong><span>創作方向</span></div>
-          </div>
-        </div>
+    <!-- 順序 2: 關於我 -->
+    <section class="section" id="about" aria-labelledby="about-title">
+      <h2 class="section-title" id="about-title">關於我</h2>
+      <div class="about-info glass">
+        <p>科系：國立範例大學 資訊管理學系 大三</p>
+        <p>自我介紹：我是王小明，主修資訊管理，專注於前端網頁開發與系統實作。熱愛透過團隊合作將創新想法轉化為實用的數位產品。在校期間積極參與各項專題開發，具備扎實的程式基礎與良好的問題解決能力。</p>
+      </div>
+    </section>
 
-        <div class="hero-visual" aria-label="作品集視覺預覽">
-          <div class="visual-grid"></div>
-          <div class="visual-note note-top">Selected work<br /><strong>01 / 08</strong></div>
-          <div class="visual-card">
-            <div class="visual-card-top"><span>01</span><span>motion study</span></div>
-            <div class="visual-orbit"><span></span><span></span><span></span></div>
-            <p>光的<br /><em>練習</em></p>
-            <div class="visual-card-bottom"><span>VISUAL / 2026</span><span>↗</span></div>
-          </div>
-          <div class="visual-note note-bottom">Scroll to explore<br /><span>↓</span></div>
-        </div>
-      </section>
+    <!-- 順序 3: 會的東西 -->
+    <section class="section" id="skills" aria-labelledby="skills-title">
+      <h2 class="section-title" id="skills-title">會的東西</h2>
+      <ul class="skills-list">
+        <li class="skill-item">JavaScript / TypeScript</li>
+        <li class="skill-item">React.js</li>
+        <li class="skill-item">Node.js</li>
+        <li class="skill-item">Git &amp; GitHub</li>
+        <li class="skill-item">SQL / PostgreSQL</li>
+      </ul>
+    </section>
 
-      <section id="about" class="about section-shell" aria-labelledby="about-title">
-        <div class="section-heading">
-          <p class="eyebrow">01 / ABOUT</p>
-          <h2 id="about-title">先觀察，再創作。</h2>
+    <!-- 順序 4: 做過的事 -->
+    <section class="section" id="experience" aria-labelledby="experience-title">
+      <h2 class="section-title" id="experience-title">做過的事</h2>
+      <div class="experience-grid">
+        <!-- 經歷 1 -->
+        <div class="exp-card glass">
+          <h3>1. 校園選課系統優化專案</h3>
+          <p class="exp-desc">負責前端介面重構與 API 串接，將頁面載入速度提升 30%，並優化使用者體驗。</p>
         </div>
-        <div class="about-grid">
-          <p class="about-statement">
-            我喜歡把複雜的訊息整理成清楚的畫面，也喜歡研究使用者如何在一個介面裡移動、停留與發現。
-          </p>
-          <div class="about-details">
-            <p>目前就讀數位多媒體相關科系，創作練習集中在品牌視覺、互動網頁與動態影像。</p>
-            <div class="skill-list" aria-label="技能列表">
-              <span>Visual Design</span><span>Web Design</span><span>Motion</span><span>Creative Coding</span>
-            </div>
-          </div>
+        <!-- 經歷 2 -->
+        <div class="exp-card glass">
+          <h3>2. 電商平台前端實習生</h3>
+          <p class="exp-desc">參與購物車與結帳流程開發，協助維護元件庫，提升團隊開發效率達 20%。</p>
         </div>
-      </section>
+        <!-- 經歷 3 -->
+        <div class="exp-card glass">
+          <h3>3. 系學會資訊部長</h3>
+          <p class="exp-desc">帶領 5 人技術團隊架設系展官網，打造數位化宣傳平台，累積超過 2,000 次瀏覽量。</p>
+        </div>
+      </div>
+    </section>
 
-      <section id="works" class="works section-shell" aria-labelledby="works-title">
-        <div class="section-heading works-heading">
-          <div>
-            <p class="eyebrow">02 / SELECTED WORKS</p>
-            <h2 id="works-title">正在形成的作品集。</h2>
-          </div>
-          <p class="section-note">每一個作品，都是一次重新整理問題的方法。</p>
-        </div>
+    <!-- 順序 5: 聯絡我 -->
+    <section class="contact-section glass" id="contact" aria-labelledby="contact-title">
+      <h2 class="section-title" id="contact-title">聯絡我</h2>
+      <div class="contact-actions">
+        <a class="btn" href="mailto:alex.wang@example.com">Email</a>
+        <a class="btn" href="https://github.com/example" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn" href="https://linkedin.com/in/example" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </section>
 
-        <div class="filter-bar" role="group" aria-label="作品分類">
-          <button class="filter-button is-active" type="button" data-filter="all">全部 <span>08</span></button>
-          <button class="filter-button" type="button" data-filter="visual">視覺設計 <span>03</span></button>
-          <button class="filter-button" type="button" data-filter="web">網頁互動 <span>03</span></button>
-          <button class="filter-button" type="button" data-filter="motion">動態影像 <span>02</span></button>
-        </div>
+  </main>
 
-        <div class="project-grid">
-          <article class="project-card project-featured" data-category="web">
-            <div class="project-art art-lumen"><span>LUMEN</span><i></i></div>
-            <div class="project-info"><p class="project-type">WEB INTERACTION · 2026</p><h3>Lumen 光影展覽網站</h3><p>以捲動敘事與互動卡片介紹校內光影展。</p><a href="#contact" class="text-link">查看專案 <span>↗</span></a></div>
-          </article>
-          <article class="project-card" data-category="visual">
-            <div class="project-art art-tide"><span>潮汐<br />TIDE</span><i></i></div>
-            <div class="project-info"><p class="project-type">VISUAL IDENTITY · 2026</p><h3>潮汐品牌識別</h3><p>從海岸線提取節奏，轉換成一組品牌視覺。</p><a href="#contact" class="text-link">查看專案 <span>↗</span></a></div>
-          </article>
-          <article class="project-card" data-category="motion">
-            <div class="project-art art-rhythm"><span>RHYTHM<br />OF AIR</span><i></i></div>
-            <div class="project-info"><p class="project-type">MOTION STUDY · 2025</p><h3>空氣的節奏</h3><p>用形狀、速度與聲音做一段動態練習。</p><a href="#contact" class="text-link">查看專案 <span>↗</span></a></div>
-          </article>
-          <article class="project-card" data-category="visual">
-            <div class="project-art art-letter"><span>A<br />Z</span><i></i></div>
-            <div class="project-info"><p class="project-type">EDITORIAL DESIGN · 2025</p><h3>字體採集誌</h3><p>記錄城市裡容易被忽略的字體風景。</p><a href="#contact" class="text-link">查看專案 <span>↗</span></a></div>
-          </article>
-          <article class="project-card" data-category="web">
-            <div class="project-art art-orbit"><span>ORBIT<br />LAB</span><i></i></div>
-            <div class="project-info"><p class="project-type">CREATIVE CODING · 2025</p><h3>Orbit 互動實驗室</h3><p>以滑鼠移動探索軌道、速度與色彩。</p><a href="#contact" class="text-link">查看專案 <span>↗</span></a></div>
-          </article>
-          <article class="project-card" data-category="motion">
-            <div class="project-art art-frame"><span>FRAME<br />BY FRAME</span><i></i></div>
-            <div class="project-info"><p class="project-type">SHORT FILM · 2025</p><h3>一格一格的日常</h3><p>將日常片段剪輯成一封給自己的影像信。</p><a href="#contact" class="text-link">查看專案 <span>↗</span></a></div>
-          </article>
-        </div>
-        <p id="empty-state" class="empty-state" hidden>這個分類目前還在累積中，換一個分類看看。</p>
-      </section>
-
-      <section id="contact" class="contact section-shell" aria-labelledby="contact-title">
-        <div class="contact-intro">
-          <p class="eyebrow">03 / CONTACT</p>
-          <h2 id="contact-title">一起做一個<br /><span>值得被看見的作品。</span></h2>
-          <p>如果你想聊聊設計、網站或下一個合作提案，歡迎留下訊息。</p>
-          <a class="contact-email" href="mailto:hello@yuan-portfolio.example">hello@yuan-portfolio.example <span>↗</span></a>
-        </div>
-        <form id="contact-form" class="contact-form">
-          <label for="name">你的名字</label>
-          <input id="name" name="name" type="text" placeholder="例如：王小明" required />
-          <label for="email">電子郵件</label>
-          <input id="email" name="email" type="email" placeholder="you@example.com" required />
-          <label for="message">想聊聊什麼？</label>
-          <textarea id="message" name="message" rows="4" placeholder="簡單描述你的想法……" required></textarea>
-          <button class="button button-primary form-submit" type="submit">送出訊息 <span aria-hidden="true">↗</span></button>
-          <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
-        </form>
-      </section>
-    </main>
-
-    <footer class="site-footer section-shell">
-      <span>© <span id="year"></span> Lin Yu-An</span>
-      <span>Built with curiosity &amp; code.</span>
-      <a href="#top">回到頂端 ↑</a>
-    </footer>
-  </body>
+</body>
 </html>
